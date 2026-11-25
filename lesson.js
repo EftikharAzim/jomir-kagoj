@@ -22,8 +22,44 @@ for (const link of document.querySelectorAll("a[data-term]")) {
   link.replaceWith(button);
 }
 
+const slug = document.querySelector("[data-lesson]")?.dataset.lesson;
+
+function readSaved(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key));
+  } catch { return null; }
+}
+
+function save(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+}
+
+if (slug) {
+  const sections = [...document.querySelectorAll("main > .lesson-section[id]")];
+  let lastSection;
+  function remember(section) {
+    if (!section || section === lastSection) return;
+    lastSection = section;
+    save("jomir.section." + slug, { id: section.id, title: section.querySelector("h2").textContent });
+  }
+  function recordScroll() {
+    const readingLine = Math.min(innerHeight / 3, 240);
+    remember(sections.filter(el => el.getBoundingClientRect().top <= readingLine).pop());
+  }
+  let pending;
+  window.addEventListener("scroll", () => {
+    if (pending) return;
+    pending = requestAnimationFrame(() => { pending = 0; recordScroll(); });
+  }, { passive: true });
+  window.addEventListener("pagehide", () => { if (pending) recordScroll(); });
+  document.addEventListener("input", event => remember(event.target.closest(".lesson-section[id]")));
+  document.addEventListener("click", event => {
+    const link = event.target.closest(".lesson-contents a");
+    remember(link ? document.getElementById(link.hash.slice(1)) : event.target.closest(".lesson-section[id]"));
+  });
+}
+
 function updateReadingPlace() {
-  const slug = document.querySelector("[data-lesson]")?.dataset.lesson;
   const resume = document.querySelector("[data-resume]");
   if (!slug && !resume) return;
   const today = new Date();
@@ -43,8 +79,11 @@ function updateReadingPlace() {
     const last = localStorage.getItem("jomir.last-lesson");
     const lesson = [...document.querySelectorAll("[data-lesson-link]")].find(link => link.dataset.lessonLink === last);
     if (lesson) {
-      resume.href = lesson.href;
-      resume.textContent = "যেখান থেকে পড়ছিলেন · পাঠ " + lesson.querySelector(".number").textContent;
+      const section = readSaved("jomir.section." + last);
+      const hasSection = typeof section?.title === "string" && /^[a-z0-9-]+$/.test(section.id);
+      resume.href = lesson.href + (hasSection ? "#" + section.id : "");
+      resume.textContent = "চালিয়ে যান · পাঠ " + lesson.querySelector(".number").textContent +
+        (hasSection ? " · " + section.title : "");
     }
     const due = localStorage.getItem("jomir.review-after");
     document.querySelector("[data-due-review]").hidden = !(due && localDay > Number(due) && !localStorage.getItem("jomir.receipt-reviewed"));
@@ -67,45 +106,110 @@ function normalizeNumber(value) {
     : NaN;
 }
 
+function checkFields(exercise, focusError) {
+  const fields = [...exercise.querySelectorAll("input[data-expected]")];
+  for (const field of fields) field.removeAttribute("aria-invalid");
+  const wrong = fields.find(field => normalizeNumber(field.value) !== Number(field.dataset.expected));
+  if (wrong) {
+    wrong.setAttribute("aria-invalid", "true");
+    if (focusError) wrong.focus();
+  }
+  revealFeedback(exercise, wrong ? wrong.dataset.hint : exercise.dataset.answer, wrong ? "retry" : "correct");
+}
+
+function markMap(buttons, selected) {
+  for (const option of buttons) {
+    option.classList.toggle("is-chosen", option === selected);
+    option.setAttribute("aria-pressed", String(option === selected));
+  }
+}
+
 for (const exercise of document.querySelectorAll("[data-exercise]")) {
   exercise.hidden = false;
+  const key = "jomir.exercise." + slug + "." + exercise.id;
+  const draft = slug ? readSaved(key) : null;
 
   if (exercise.dataset.exercise === "map") {
     const buttons = exercise.querySelectorAll("[data-choice]");
+    const selected = [...buttons].find(button => button.dataset.choice === draft?.choice);
+    if (selected) {
+      markMap(buttons, selected);
+      checkChoice(exercise, selected.dataset.choice);
+    }
     for (const button of buttons) {
       button.addEventListener("click", () => {
-        for (const option of buttons) {
-          const selected = option === button;
-          option.classList.toggle("is-chosen", selected);
-          option.setAttribute("aria-pressed", String(selected));
-        }
+        markMap(buttons, button);
+        if (slug) save(key, { choice: button.dataset.choice });
         checkChoice(exercise, button.dataset.choice);
       });
     }
     continue;
   }
 
-  exercise.addEventListener("submit", event => {
-    event.preventDefault();
+  function grade(focusError) {
     if (exercise.dataset.exercise === "choices") {
       checkChoice(exercise, new FormData(exercise).get("answer"));
       return;
     }
 
-    for (const field of exercise.querySelectorAll("[data-expected]")) {
-      field.removeAttribute("aria-invalid");
+    checkFields(exercise, focusError);
+  }
+  if (draft?.values && typeof draft.values === "object") {
+    for (const field of exercise.querySelectorAll("input")) {
+      const value = draft.values[field.name];
+      if (typeof value !== "string") continue;
+      if (field.type === "radio") field.checked = field.value === value;
+      else field.value = value;
     }
-    const wrongField = [...exercise.querySelectorAll("[data-expected]")].find(field =>
-      normalizeNumber(field.value) !== Number(field.dataset.expected)
-    );
-    if (wrongField) {
-      wrongField.setAttribute("aria-invalid", "true");
-      wrongField.focus();
-      revealFeedback(exercise, wrongField.dataset.hint, "retry");
-      return;
-    }
-    revealFeedback(exercise, exercise.dataset.answer, "correct");
+    if (draft.submitted) grade(false);
+  }
+  function saveForm(submitted) {
+    if (slug) save(key, { values: Object.fromEntries(new FormData(exercise)), submitted });
+  }
+  exercise.addEventListener("input", () => {
+    saveForm(false);
+    const feedback = exercise.querySelector(".feedback");
+    feedback.textContent = "";
+    delete feedback.dataset.state;
+    for (const field of exercise.querySelectorAll("[aria-invalid]")) field.removeAttribute("aria-invalid");
   });
+  exercise.addEventListener("submit", event => {
+    event.preventDefault();
+    saveForm(true);
+    grade(true);
+  });
+}
+
+const glossarySearch = document.querySelector(".glossary-search");
+if (glossarySearch) {
+  glossarySearch.hidden = false;
+  const input = glossarySearch.querySelector("input");
+  const clear = glossarySearch.querySelector("button");
+  const status = glossarySearch.querySelector("[role=status]");
+  const groups = [...document.querySelectorAll(".glossary .lesson-section")];
+  function normalizeWord(value) {
+    return value.normalize("NFC").replace(/[.\s\u200c\u200d]+/g, "").toLowerCase();
+  }
+  function filterWords() {
+    const query = normalizeWord(input.value);
+    let count = 0;
+    for (const group of groups) {
+      let matches = 0;
+      for (const term of group.querySelectorAll("dt")) {
+        const match = normalizeWord(term.textContent).includes(query);
+        term.parentElement.hidden = !match;
+        if (match) matches++;
+      }
+      group.hidden = matches === 0;
+      count += matches;
+    }
+    document.querySelector(".glossary-nav").hidden = !!query;
+    clear.hidden = !input.value;
+    status.textContent = !query ? "" : count ? count.toLocaleString("bn-BD") + "টি শব্দ পাওয়া গেছে।" : "শব্দটি পাওয়া যায়নি। কম অক্ষর দিয়ে খুঁজুন।";
+  }
+  input.addEventListener("input", filterWords);
+  clear.addEventListener("click", () => { input.value = ""; filterWords(); input.focus(); });
+  window.addEventListener("pageshow", filterWords);
 }
 for (const select of document.querySelectorAll(".land-scale select")) {
   const figure = select.closest(".land-scale");
