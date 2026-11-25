@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f4eb">
-  <meta name="description" content="একর, শতক ও বর্গফুটে দলিলের পরিমাণ মিলিয়ে দেখুন।">
+  <meta name="description" content="কাঠা, বিঘা, শতক, একর ও বর্গফুটে একই জমির পরিমাণ মিলিয়ে দেখুন।">
   <title>জমির পরিমাণ হিসাব করুন | জমির কাগজ বুঝি</title>
   <link rel="stylesheet" href="../../styles.css">
   <script defer src="../../lesson.js"></script>
@@ -60,9 +60,33 @@
   </details>
 
     </section><section class="lesson-section stack lesson-section--paired">
-      <h2>একই জমি, তিন একক</h2><p>১ একর = ১০০ শতক = ৪৩,৫৬০ বর্গফুট। তাই ১ শতক = ৪৩৫.৬ বর্গফুট। শতককে বর্গফুট করতে ৪৩৫.৬ দিয়ে গুণ করুন। বর্গফুটকে শতক করতে ভাগ করুন। খতিয়ান বা দলিলে কাঠা বা বিঘা থাকলে ওই এলাকার ব্যবহৃত মান আগে জানা দরকার।</p>
+      <h2>একই জমি, তিন একক</h2><p>১ একর = ১০০ শতক = ৪৩,৫৬০ বর্গফুট। তাই ১ শতক = ৪৩৫.৬ বর্গফুট। শতককে বর্গফুট করতে ৪৩৫.৬ দিয়ে গুণ করুন। বর্গফুটকে শতক করতে ভাগ করুন।</p>
       <div class="lesson-visual"><p class="calculation">০.১২০০ একর × ১০০ = ১২ শতক<br>১২ শতক × ৪৩৫.৬ = ৫,২২৭.২ বর্গফুট</p></div>
 
+
+    </section><section id="katha-bigha" class="lesson-section stack">
+      <h2>কাঠা–বিঘার হিসাব কীভাবে করবেন?</h2><p>কেউ বললেন, ‘জমি এক বিঘা পাঁচ কাঠা।’ এই উদাহরণে ভূমি মন্ত্রণালয়ের বর্গফুটের সারণির মান ধরুন। ১ কাঠা = ৭২০ বর্গফুট, ২০ কাঠা = ১ বিঘা। চোখে মাপটা ধরতে ২০ ফুট চওড়া আর ৩৬ ফুট লম্বা একটি আয়তাকার উঠান ভাবুন। এমন একটি উঠান ১ কাঠা। এমন ২০টির সমান জায়গা ১ বিঘা।</p>
+      <div class="lesson-visual"><ol class="task-list">
+          <li><strong>কাঠা থেকে শতক।</strong> ১ কাঠা = ৭২০ ÷ ৪৩৫.৬ ≈ ১.৬৫ শতক। তাই ১ বিঘা = ২০ × ৭২০ = ১৪,৪০০ বর্গফুট ≈ ৩৩.০৬ শতক। মুখে ‘৩৩ শতক’ শুনলে মনে রাখুন, এই হিসাবে সেটি কাছাকাছি মান।</li>
+          <li><strong>এক বিঘা পাঁচ কাঠা।</strong> আগে সবটা কাঠায় আনুন। ২০ + ৫ = ২৫ কাঠা। এবার ২৫ × ৭২০ = ১৮,০০০ বর্গফুট। ১৮,০০০ ÷ ৪৩৫.৬ ≈ ৪১.৩২ শতক। মাঝপথে ১.৬৫ দিয়ে গুণ করলে কিছুটা তফাত আসে। দশমিক ছোট করুন শেষে।</li>
+          <li><strong>দলিলের ১২ শতক কত কাঠা?</strong> উল্টো পথে যান। ১২ × ৪৩৫.৬ = ৫,২২৭.২ বর্গফুট। ৫,২২৭.২ ÷ ৭২০ = ৭.২৬ কাঠা।</li>
+        </ol><p>পুরোনো দলিলে শুধু ‘বিঘা’ লেখা থাকলে আগে দেখুন তফসিলে পাশাপাশি শতক, একর বা বর্গফুট দেওয়া আছে কি না। স্থানীয় কাঠা বা বিঘার মান আলাদা হতে পারে। মানের ভিত্তি জানা না গেলে দলিলের পরিমাণটি তার নিজের এককেই লিখে রাখুন।</p></div>
+      <form id="convert-katha-bigha" class="practice" data-exercise="fields" data-expected="" data-hint="" data-answer="১ বিঘা ২ কাঠা = ২০ + ২ = ২২ কাঠা। ২২ × ৭২০ = ১৫,৮৪০ বর্গফুট। ১৫,৮৪০ ÷ ৪৩৫.৬ ≈ ৩৬.৩৬ শতক।" hidden>
+    <fieldset><legend>একই মাপে ১ বিঘা ২ কাঠা জমি মোট কত কাঠা? কত শতক? শতকের উত্তর দুই দশমিক ঘরে লিখুন।</legend>
+    <label class="field">মোট কাঠা
+      <input name="katha" type="text" inputmode="numeric"
+        autocomplete="off" required data-expected="22" data-hint="এক বিঘার ২০ কাঠার সঙ্গে আরও ২ কাঠা যোগ করুন।">
+    </label>
+    <label class="field">মোট শতক
+      <input name="shotok" type="text" inputmode="decimal"
+        autocomplete="off" required data-expected="36.36" data-hint="মোট কাঠাকে ৭২০ দিয়ে গুণ করে বর্গফুট বের করুন। তারপর ৪৩৫.৬ দিয়ে ভাগ করুন।">
+    </label></fieldset>
+    <button class="button" type="submit">উত্তর মিলিয়ে দেখুন</button><p class="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+  </form><details class="static-answer">
+    <summary>লেখায় অনুশীলন করুন</summary>
+    <p>একই মাপে ১ বিঘা ২ কাঠা জমি মোট কত কাঠা? কত শতক? শতকের উত্তর দুই দশমিক ঘরে লিখুন।</p>
+    <details><summary>উত্তর দেখুন</summary><p>১ বিঘা ২ কাঠা = ২০ + ২ = ২২ কাঠা। ২২ × ৭২০ = ১৫,৮৪০ বর্গফুট। ১৫,৮৪০ ÷ ৪৩৫.৬ ≈ ৩৬.৩৬ শতক।</p></details>
+  </details>
 
     </section><section class="lesson-section stack">
       <h2>আয়তক্ষেত্র থেকে বাদ যাওয়া অংশ হিসাব করুন</h2><p>ধরুন ১২ শতক বলে যে অংশ দেখানো হয়েছে, তার মাপ আপনি একটি ছকে লিখলেন। এই অনুশীলনে সব কোণ সমকোণ। পুরো আয়তক্ষেত্রের দৈর্ঘ্য ও প্রস্থ গুণ করুন, তারপর কাটা কোণের আয়তন বাদ দিন।</p>
@@ -119,7 +143,7 @@
       <a href="../documents/index.html">আগের পাঠ</a>
       <a class="button" href="../survey-records/index.html">পরের পাঠ · সাবেক ও হাল দাগ মেলান</a>
     </nav>
-    <details class="sources"><summary>এই পাঠের সূত্র</summary><ul><li><a href="https://e-learning.bteb.gov.bd/upload/lesson/202504221745305568.pdf">বাংলাদেশ কারিগরি শিক্ষা বোর্ড · একর ও বর্গফুটের সম্পর্ক</a></li><li><a href="https://www.teachers.gov.bd/blog/details/792624">শিক্ষক বাতায়ন · শতক ও স্থানীয় জমির একক</a></li></ul></details></main>
+    <details class="sources"><summary>এই পাঠের সূত্র</summary><ul><li><a href="https://e-learning.bteb.gov.bd/upload/lesson/202504221745305568.pdf">বাংলাদেশ কারিগরি শিক্ষা বোর্ড · একর ও বর্গফুটের সম্পর্ক</a></li><li><a href="https://minland.gov.bd/pages/static-pages/694032ae35ce18e1c0560717">ভূমি মন্ত্রণালয় · ভূমি পরিমাপের আদর্শ এককসমূহ, কাঠা ও বিঘার বর্গফুটের সারণি</a></li></ul></details></main>
   <footer class="site-footer"><div class="wrap">
     <span>জমির কাগজ বুঝি</span><a href="../../documents/index.html">বাস্তব কাগজ পড়ুন</a>
   </div></footer>
