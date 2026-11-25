@@ -234,6 +234,53 @@ input[type="radio"] { accent-color: var(--green); flex: none; }
   .map-label.water { top: 4%; right: 2%; }
 }
 .paper-crop { display: block; max-width: 100%; height: auto; background: white; }
+.case-figure { grid-column: 1 / -1; padding: 1rem; border: 1px solid var(--line); border-inline-start: 4px solid var(--green); background: var(--white); }
+.case-figure figcaption { margin: 0 0 .75rem; color: var(--green); }
+.case-figure .figure-note { margin-top: .65rem; font-size: .95em; }
+.case-figure .paper-crop { max-height: 11rem; width: auto; object-fit: contain; }
+.case-matrix { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.case-matrix th, .case-matrix td { text-align: start; padding: .32em .45em; vertical-align: top; border-bottom: 1px solid var(--line); }
+.case-matrix thead { background: var(--leaf); }
+.case-timeline { display: flex; gap: .8rem; }
+.case-timeline > div { flex: 1; border-top: 2px solid var(--green); position: relative; padding-top: .45rem; }
+.case-timeline > div::before { content: ""; position: absolute; top: -.28rem; width: .45rem; height: .45rem; border-radius: 50%; background: var(--green); }
+.case-timeline span, .sum-line b { display: block; }
+.case-bars > div { display: grid; grid-template-columns: minmax(5em, 1fr) minmax(2em, 2fr) auto; gap: .55em; align-items: center; }
+.case-track { border-bottom: 1px dotted var(--muted); }
+.case-track i { height: .6em; display: block; background: var(--green); border: 1px solid var(--ink); }
+.map-pair, .access-plan, .merge-strip, .sum-line { display: flex; }
+.map-pair { gap: 1em; }
+.map-pair > div { flex: 1; }
+.map-plots { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--ink); }
+.map-plots span, .access-plan span, .merge-strip span, .merge-total { text-align: center; border: 1px solid var(--ink); padding: .3em; }
+.map-plots span:first-child { grid-row: span 2; align-content: center; }
+.plot-mark, .merge-strip span:first-child, .access-plan span:first-child { background: var(--leaf); }
+.map-plots .plot-mark { outline: 2px dashed var(--green); outline-offset: -4px; font-weight: 700; }
+.bigha-grid { display: grid; grid-template-columns: repeat(5, 1fr); max-width: 14em; border: 1px solid var(--ink); }
+.bigha-grid i { height: 1.1em; border: 1px solid var(--ink); }
+.bigha-grid i:first-child { background: var(--green); }
+.merge-strip span:first-child { flex: 3; }
+.merge-strip span:last-child { flex: 7; }
+.merge-total { border-top: none; font-weight: bold; }
+.access-plan { align-items: stretch; }
+.access-plan span { flex: 1; align-content: center; }
+.access-plan span:nth-child(2) { border-style: dashed; }
+.access-plan span:last-child { background: var(--ink); color: white; border-block: 4px double white; }
+.sum-line { align-items: center; justify-content: space-between; gap: .45em; flex-wrap: wrap; }
+.sum-line i { font-style: normal; }
+.pond-pair { display: grid; grid-template-columns: 1fr 1fr; gap: .6em; margin-top: .5em; }
+.pond-plot { display: grid; grid-template-columns: 2em 1fr; margin-block: .3em; text-align: center; print-color-adjust: exact; }
+.pond-plot > * { border: 1px solid var(--muted); }
+.pond-edge { grid-column: 2; background: var(--water); }
+.road-edge { grid-area: 2 / 1 / span 4; writing-mode: vertical-rl; justify-self: stretch; align-content: center; background: var(--paper); }
+.pond-plot .pond-selected { background: var(--leaf); }
+@media screen and (max-width: 480px) {
+  .case-timeline { flex-direction: column; gap: 0; }
+  .case-timeline > div { border-top: none; border-inline-start: 2px solid var(--green); padding: 0 0 .65em .85em; }
+  .case-timeline > div::before { top: .4em; left: -.28rem; }
+  .sum-line { flex-direction: column; align-items: start; gap: .15em; }
+  .sum-line b { display: inline; margin-inline-start: .4em; }
+}
 .crop-link { display: block; width: fit-content; max-width: 100%; }
 .reading details p { margin-block: .6em; }
 .inline-term { padding: 0; font: inherit; color: var(--green); border: 0; border-bottom: 1px dotted currentColor; background: transparent; cursor: pointer; }
