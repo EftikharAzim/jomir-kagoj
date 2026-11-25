@@ -214,8 +214,12 @@ if (glossarySearch) {
 for (const select of document.querySelectorAll(".land-scale select")) {
   const figure = select.closest(".land-scale");
   const grid = figure.querySelector(".acre-grid");
+  let previousArea;
   const describe = () => {
     const option = select.selectedOptions[0];
+    const area = Number(option.dataset.cols) * Number(option.dataset.rows);
+    grid.classList.toggle("same-area", area === previousArea);
+    previousArea = area;
     grid.style.setProperty("--plot-width", Number(option.dataset.cols) * 10 + "%");
     grid.style.setProperty("--plot-height", Number(option.dataset.rows) * 10 + "%");
     figure.querySelector("[aria-live]").textContent = option.dataset.note;
@@ -223,4 +227,22 @@ for (const select of document.querySelectorAll(".land-scale select")) {
   select.parentElement.hidden = false;
   select.addEventListener("change", describe);
   describe();
+}
+
+for (const controls of document.querySelectorAll(".boundary-controls")) {
+  const figure = controls.closest(".pond-figure");
+  const buttons = controls.querySelectorAll("[data-edge]");
+  const notes = {
+    road: "দুই ছবিতেই টিক দেওয়া তিন ফালির পশ্চিম ধার রাস্তা ছোঁয়। শুধু এই সূত্রে দুটির মধ্যে বেছে নেওয়া যায় না।",
+    pond: "বাঁয়ে টানা রেখার ওপাশে পুকুর। ডানে ভাঙা রেখার ওপাশে ক ফালি। ‘উত্তরে পুকুর’ তাই বাঁয়ের ক, খ, গ ফালির সঙ্গে মেলে।",
+  };
+  for (const button of buttons) {
+    button.addEventListener("click", () => {
+      const edge = figure.dataset.edge === button.dataset.edge ? "" : button.dataset.edge;
+      figure.dataset.edge = edge;
+      for (const other of buttons) other.setAttribute("aria-pressed", String(other.dataset.edge === edge));
+      controls.querySelector("[role=status]").textContent = notes[edge] || "";
+    });
+  }
+  controls.hidden = false;
 }

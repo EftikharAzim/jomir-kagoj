@@ -284,6 +284,22 @@ input[type="radio"] { accent-color: var(--green); flex: none; }
 .pond-edge { grid-column: 2; background: var(--water); }
 .road-edge { grid-area: 2 / 1 / span 4; writing-mode: vertical-rl; justify-self: stretch; align-content: center; background: var(--paper); }
 .pond-plot .pond-selected { background: var(--leaf); }
+.boundary-controls [role="group"] { display: flex; flex-wrap: wrap; gap: .4rem; }
+.boundary-controls button { font: inherit; min-height: 2.75rem; padding: .3rem .6rem; color: var(--green); background: var(--white); border: 1px solid var(--green); border-radius: .25rem; }
+.boundary-controls button[aria-pressed="true"] { color: white; background: var(--green); }
+.boundary-controls [role="status"]:empty { display: none; }
+.pond-selected { position: relative; }
+.pond-figure[data-edge="road"] .pond-selected::after { content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; border-left: 4px solid var(--green); transform-origin: top; }
+.pond-figure[data-edge="pond"] .pond-selected:first-of-type::after { content: ""; position: absolute; left: -1px; right: -1px; top: -1px; border-top: 4px solid var(--green); transform-origin: left; }
+.pond-figure[data-edge="pond"] .pond-pair > :last-child .pond-selected:first-of-type::after { border-top-style: dashed; }
+@media screen and (prefers-reduced-motion: no-preference) {
+  .land-scale .acre-grid:not(.same-area) span { transition: width .38s ease-out, height .38s ease-out; }
+  .pond-figure[data-edge="road"] .pond-selected::after { animation: trace-west .36s ease-out; }
+  .pond-figure[data-edge="pond"] .pond-selected:first-of-type::after { animation: trace-north .36s ease-out; }
+}
+@keyframes trace-west { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes trace-north { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media print { .boundary-controls { display: none; } }
 @media screen and (max-width: 480px) {
   .case-timeline { flex-direction: column; gap: 0; }
   .case-timeline > div { border-top: none; border-inline-start: 2px solid var(--green); padding: 0 0 .65em .85em; }
